@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "TechVedhu Backend Running Successfully 🚀";
+        return "TechVedhu Backend Running Successfully";
     }
 }
