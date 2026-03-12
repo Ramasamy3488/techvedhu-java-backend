@@ -1,26 +1,17 @@
 package com.ramtech.config;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.Collections;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -28,33 +19,24 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // Allow authentication APIs without token
+        if (path.startsWith("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String token = null;
-
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-
-            token = authHeader.substring(7);
-
-            username = jwtUtil.extractUsername(token);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        String token = authHeader.substring(7);
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            username,
-                            null,
-                            Collections.emptyList()
-                    );
-
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+        // TODO: validate token here if needed
 
         filterChain.doFilter(request, response);
     }
