@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://ramasamyfullstack.github.io"
+})
 @RestController
 @RequestMapping("/auth")
 public class UserController {
@@ -27,5 +30,6 @@ public class UserController {
     public Map<String,String> login(@RequestBody User user){
         return userService.login(user);
     }
+
 
 }
