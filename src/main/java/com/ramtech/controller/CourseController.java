@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://ramasamyfullstack.github.io"
+})
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -39,4 +42,5 @@ public class CourseController {
     public String deleteCourse(@PathVariable Long id){
         return service.deleteCourse(id);
     }
+
 }
