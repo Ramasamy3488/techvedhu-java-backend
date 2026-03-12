@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ramtech.dto.EnrollmentDTO;
 import com.ramtech.service.EnrollmentService;
 
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "https://ramasamyfullstack.github.io"
-})
+
 @RestController
 @RequestMapping("/enrollments")
 public class EnrollmentController {
@@ -69,3 +66,4 @@ public class EnrollmentController {
 
 
 }
+
